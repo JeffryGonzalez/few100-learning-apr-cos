@@ -245,17 +245,97 @@ describe('some practical examples', () => {
             lowScorer: string;
         }
 
+        const initialState: Results = {
+            highScore: -1,
+            highScorer: null,
+            lowScore: 301,
+            lowScorer: null
+        }
 
-        // TODO: Your Code Here - use the reduce method to calculate the results
+        const results: Results = scores.reduce((state: Results, game: BowlingGame) => ({
+            highScore: game.score > state.highScore ? game.score : state.highScore,
+            highScorer: game.score > state.highScore ? game.playerName : state.highScorer,
+            lowScore: game.score < state.lowScore ? game.score : state.lowScore,
+            lowScorer: game.score < state.lowScore ? game.playerName : state.lowScorer
+        }), initialState)
 
-        /*
-        {
+        const expected = {
             highScore: 227,
             highScorer: 'Henry',
             lowScore: 118,
-            lowScorer: 'Violet
+            lowScorer: 'Violet'
         }
-        */
+
+        expect(results).toEqual(expected);
+
+        const age = 22;
+        let message: string;
+        if (age > 21) {
+            message = 'Old Enough';
+        } else {
+            message = 'Too Young';
+        }
+
+        message = age > 21 ? 'Old Enough' : 'Too Young';
+    });
+    describe('sneak peak', () => {
+        it('basic redux', () => {
+            interface Action { type: string }
+            class Increment implements Action {
+                readonly type = 'increment'
+            }
+
+            class Decrement implements Action {
+                readonly type = 'decrement';
+            }
+
+            class Reset implements Action {
+                readonly type = 'reset';
+            }
+
+
+            interface ApplicationState {
+                count: number;
+            }
+
+            const initialState: ApplicationState = {
+                count: 0
+            };
+
+            const actions: Action[] = [
+                new Increment(),
+                new Decrement(),
+                new Increment(),
+                new Increment(),
+                new Increment(),
+                new Increment(),
+                new Reset(),
+                new Decrement(),
+                new Decrement(),
+                new Increment(),
+                new Increment(),
+                new Increment(),
+                new Increment()
+            ];
+
+            const result: ApplicationState = actions.reduce((state: ApplicationState, action: Action) => {
+                switch (action.type) {
+                    case 'increment': {
+                        return { count: state.count + 1 }
+                    }
+                    case 'decrement': {
+                        return { count: state.count - 1 }
+                    }
+                    case 'reset': {
+                        return { count: 0 }
+                    }
+                }
+            }, initialState);
+            expect(result.count).toBe(2);
+
+            // CURSOR - current set of records
+        });
+
 
     });
 });
