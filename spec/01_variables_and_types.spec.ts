@@ -241,6 +241,13 @@ describe('literals', () => {
                 message: 'Pick up dry cleaning!'
             }
 
+            interface Song { title: string; artist: string };
+            const song = {
+                title: 'Feeling',
+                artist: 'Q-Tip'
+            };
+
+
 
             logIt(anotherCall);
 
@@ -256,9 +263,86 @@ describe('literals', () => {
 
             logIt(email);
 
+            const appointment: EmailMessage = {
+                message: 'Don\'t forget to show up!',
+                from: 'Joe',
+                subject: 'Your Appointment'
+            }
+
 
 
         });
+
+    });
+});
+describe('some other stuff', () => {
+    it('enums', () => {
+        enum SeatType { Window, Aisle, Middle };
+
+        const mySeat: SeatType = SeatType.Window;
+
+
+    });
+    it('has literal union types', () => {
+
+        type SeatType = 'Window' | 'Aisle' | 'Middle';
+
+        function getPriceForSeat(seat: SeatType) {
+            switch (seat) {
+                case 'Window': {
+                    return 150;
+                }
+                case 'Middle': {
+                    return 75;
+                }
+                case 'Aisle': {
+                    return 175;
+                }
+            }
+        }
+
+        const rate = getPriceForSeat('Middle');
+        expect(rate).toBe(75);
+
+    });
+    it('truthiness', () => {
+        interface Course {
+            name: string;
+            instructor: string;
+            dates?: string[]
+        }
+
+        const javaScript: Course = {
+            name: 'JavaScript is Fun',
+            instructor: 'Joe Schmidt',
+            dates: ['Next Week']
+        }
+
+        function enroll(student: string, course: Course) {
+            if (course.dates) {
+                // there are dates for the course
+                console.log(`Enrolling ${student} in ${course.name}`);
+            } else {
+                // there aren't.
+                console.log(`sorry could not enroll stuent in ${course.name} there are no dates`);
+            }
+
+        }
+
+        enroll('Jim', javaScript);
+    });
+    it('truth table', () => {
+        expect(undefined).toBeFalsy();
+        expect(null).toBeFalsy();
+        expect(0).toBeFalsy();
+        expect('').toBeFalsy();
+        expect(1).toBeTruthy();
+        expect(-1).toBeTruthy();
+        expect(NaN).toBeFalsy();
+        expect('penguin').toBeTruthy();
+
+        // C# ==, TS ===
+        // C# !=, TS !==
 
     });
 });

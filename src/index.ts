@@ -8,6 +8,11 @@ const firstName = document.getElementById('firstName') as HTMLInputElement;
 const lastName = document.getElementById('lastName') as HTMLInputElement;
 const formatted = document.getElementById('formatted') as HTMLHeadingElement;
 
+if (!formatted) {
+    console.log('That did not find any element on the page with the Id of formatted');
+}
+
+
 console.log({
     theButton,
     firstName,
