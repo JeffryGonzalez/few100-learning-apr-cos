@@ -125,15 +125,137 @@ describe('functions', () => {
             expect(formatName('Han', 'Solo')).toBe('Solo, Han');
             expect(formatName('Han', 'Solo', 'D')).toBe('Solo, Han D.');
 
-            function addThem(a: number = 10, b: number = 20) {
-                return a + b;
+            function addThem(a: number = 10, b: number = 20, ...rest: number[]): number {
+                const firstTwo = a + b;
+                return rest.reduce((s, n) => s + n, firstTwo);
             }
+
+            function doIt(a: number, b: number) {
+                const sum = a + b;
+                if (sum > 20) {
+                    return sum;
+                } else {
+                    return sum.toString();
+                }
+            }
+            const s2 = doIt(30, 20);
 
             expect(addThem(2, 2)).toBe(4);
             expect(addThem(5)).toBe(25);
             expect(addThem(undefined, 10)).toBe(20); // passing in undefined (and only undefined) says use the default for this parameter.
+            expect(addThem(1, 2, 3, 4, 5, 6, 7, 8, 9)).toBe(45);
+        });
+
+    });
+});
+describe('the array methods', () => {
+    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    describe('visiting each member of an array', () => {
+        it('has forEach', () => {
+            numbers.forEach(n => console.log(n));
+        });
+
+    });
+    describe('methods that create a new array from another array', () => {
+        it('filtering', () => {
+            const odds = numbers.filter(n => n % 2 !== 0);
+            expect(odds).toEqual([1, 3, 5, 7, 9]);
+        });
+
+        it('map', () => {
+
+            const doubled = numbers.map(a => a * 2);
+            expect(doubled).toEqual([2, 4, 6, 8, 10, 12, 14, 16, 18]);
+
+            const stringified = numbers.map(n => n.toString());
+            expect(stringified).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9'])
+        });
+    });
+    describe('array methods that return a single (scalar) value', () => {
+
+        it('testing membership of an array', () => {
+            const allEven = numbers.every(n => n % 2 === 0);
+            expect(allEven).toBe(false);
+
+            const someEven = numbers.some(n => n % 2 === 0);
+            expect(someEven).toBe(true);
 
         });
+        it('has reduce', () => {
+            const sum = numbers.reduce((s, n) => s + n);
+            expect(sum).toBe(45);
+            const sum2 = numbers.reduce((s, n) => s + n, 100);
+            expect(sum2).toBe(145);
+        });
+    });
+
+});
+
+describe('some practical examples', () => {
+
+    it('shopping', () => {
+        interface CartItem {
+            name: string;
+            qty: number;
+            price: number;
+        }
+
+        const cart: CartItem[] = [
+            { name: 'Eggs', qty: 1, price: 2.99 },
+            { name: 'Bread', qty: 3, price: 3.57 },
+            { name: 'Shampoo', qty: 2, price: 7.25 }
+        ];
+
+        interface Bill {
+            totalQty: number;
+            totalPrice: number;
+        }
+
+        const initialState: Bill = {
+            totalPrice: 0,
+            totalQty: 0
+        };
+
+        const finalBill: Bill = cart.reduce((state: Bill, nextCartItem: CartItem) => ({
+            totalQty: state.totalQty + nextCartItem.qty,
+            totalPrice: state.totalPrice + (nextCartItem.qty * nextCartItem.price)
+        }), initialState)
+
+        expect(finalBill.totalQty).toBe(6);
+        expect(finalBill.totalPrice).toBe(28.2);
+    });
+    it('practice 2', () => {
+        interface BowlingGame {
+            playerName: string;
+            score: number;
+        }
+
+        const scores: BowlingGame[] = [
+            { playerName: 'Jeff', score: 127 },
+            { playerName: 'Henry', score: 227 },
+            { playerName: 'Stacey', score: 212 },
+            { playerName: 'Violet', score: 118 }
+        ];
+
+        interface Results {
+            highScore: number;
+            highScorer: string;
+            lowScore: number;
+            lowScorer: string;
+        }
+
+
+        // TODO: Your Code Here - use the reduce method to calculate the results
+
+        /*
+        {
+            highScore: 227,
+            highScorer: 'Henry',
+            lowScore: 118,
+            lowScorer: 'Violet
+        }
+        */
 
     });
 });
